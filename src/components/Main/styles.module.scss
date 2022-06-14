@@ -1,0 +1,13 @@
+.main {
+  display: flex;
+}
+
+.main > * {
+  margin: 20px;
+}
+
+.outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
