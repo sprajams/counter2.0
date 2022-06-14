@@ -13,13 +13,13 @@ function Main() {
   ]);
 
   const [undo, setUndo] = useState();
-  const [redo, setRedo] = useState();
+  const [redo, setRedo] = useState([]);
 
   useEffect(() => {
     // if undo exists, then reset total to previous number and set undo back to undefined
     if (undo) {
       setTotal(undo.before);
-      setRedo(undo);
+      setRedo([...redo, undo]);
       setUndo();
     }
   }, [undo, total, redo]);
@@ -40,19 +40,16 @@ function Main() {
   };
 
   const redoAction = () => {
-    history.push(redo);
-    setTotal(redo.after);
-    setRedo();
+    const newestRedo = redo.pop();
+    history.push(newestRedo);
+    setTotal(newestRedo.after);
   };
 
   return (
     <div className={styles.outer}>
       <div>
         <button onClick={undoAction}>UNDO</button>
-        <button
-          onClick={redoAction}
-          disabled={redo === undefined ? true : false}
-        >
+        <button onClick={redoAction} disabled={redo.length > 0 ? false : true}>
           REDO
         </button>
       </div>
