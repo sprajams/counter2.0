@@ -1,5 +1,6 @@
-function ActionBtn({ setTotal, value }) {
+function ActionBtn({ setTotal, value, onClick }) {
   const plusOne = () => {
+    onClick(value);
     setTotal((curr) => curr + value);
   };
 

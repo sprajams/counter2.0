@@ -4,65 +4,68 @@ import ActionBtn from "../ActionBtn";
 import styles from "./styles.module.scss";
 function Main() {
   const [total, setTotal] = useState(0);
-  // const [history, setHistory] = useState([
-  //   {
-  //     action: "",
-  //     before: "",
-  //     after: "",
-  //   },
-  // ]);
+  const [history, setHistory] = useState([
+    {
+      action: "",
+      before: "",
+      after: "",
+    },
+  ]);
 
   const [undo, setUndo] = useState();
   const [redo, setRedo] = useState();
 
-  // const onClick = () => {
-  //   // setTotal(total + -1);
-  //   // setHistory([...history, { action: -1, before: total, after: total + -1 }]);
-  //   console.log("click clack");
-  // };
+  useEffect(() => {
+    // if undo exists, then reset total to previous number and set undo back to undefined
+    if (undo) {
+      setTotal(undo.before);
+      setRedo(undo);
+      setUndo();
+    }
+  }, [undo, total, redo]);
 
-  // const undoAction = () => {
-  //   //remove last object in history arr and store it into a state
-  //   if (history.length > 1) {
-  //     setUndo(history.pop());
-  //   }
-  // };
+  // update history when user clicks on action button
+  const onClick = (value) => {
+    setHistory([
+      ...history,
+      { action: value, before: total, after: total + value },
+    ]);
+  };
 
-  // const redoAction = () => {
-  //   history.push(redo);
-  //   setTotal(redo.after);
-  //   setRedo();
-  // };
-  // useEffect(() => {
-  //   // if undo exists, then reset total to previous number and set undo back to undefined
-  //   if (undo) {
-  //     setTotal(undo.before);
-  //     setRedo(undo);
-  //     setUndo();
-  //   }
-  // }, [undo, total, redo]);
+  const undoAction = () => {
+    //remove last object in history arr and store it into a state
+    if (history.length > 1) {
+      setUndo(history.pop());
+    }
+  };
+
+  const redoAction = () => {
+    history.push(redo);
+    setTotal(redo.after);
+    setRedo();
+  };
 
   return (
     <div className={styles.outer}>
       <div>
-        {/* <button onClick={undoAction}>UNDO</button>
+        <button onClick={undoAction}>UNDO</button>
         <button
           onClick={redoAction}
           disabled={redo === undefined ? true : false}
         >
           REDO
-        </button> */}
+        </button>
       </div>
       <div className={styles.main}>
-        <ActionBtn setTotal={setTotal} value={-100} />
-        <ActionBtn setTotal={setTotal} value={-10} />
-        <ActionBtn setTotal={setTotal} value={-1} />
+        <ActionBtn setTotal={setTotal} value={-100} onClick={onClick} />
+        <ActionBtn setTotal={setTotal} value={-10} onClick={onClick} />
+        <ActionBtn setTotal={setTotal} value={-1} onClick={onClick} />
         <div>{total}</div>
-        <ActionBtn setTotal={setTotal} value={1} />
-        <ActionBtn setTotal={setTotal} value={10} />
-        <ActionBtn setTotal={setTotal} value={100} />
+        <ActionBtn setTotal={setTotal} value={1} onClick={onClick} />
+        <ActionBtn setTotal={setTotal} value={10} onClick={onClick} />
+        <ActionBtn setTotal={setTotal} value={100} onClick={onClick} />
       </div>
-      {/* <History data={history} /> */}
+      <History data={history} />
     </div>
   );
 }
