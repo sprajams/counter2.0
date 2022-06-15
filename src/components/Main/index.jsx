@@ -27,21 +27,25 @@ function Main() {
   // update history when user clicks on action button
   const onClick = (value) => {
     setHistory([
+      {
+        action: (value > 0 ? `+` : `-`) + Math.abs(value),
+        before: total,
+        after: total + value,
+      },
       ...history,
-      { action: value, before: total, after: total + value },
     ]);
   };
 
   const undoAction = () => {
     //remove last object in history arr and store it into a state
     if (history.length > 1) {
-      setUndo(history.pop());
+      setUndo(history.shift());
     }
   };
 
   const redoAction = () => {
     const newestRedo = redo.pop();
-    history.push(newestRedo);
+    history.unshift(newestRedo);
     setTotal(newestRedo.after);
   };
 
@@ -62,7 +66,7 @@ function Main() {
         <ActionBtn setTotal={setTotal} value={10} onClick={onClick} />
         <ActionBtn setTotal={setTotal} value={100} onClick={onClick} />
       </div>
-      <History data={history} />
+      <History data={history.slice(0, -1)} />
     </div>
   );
 }
